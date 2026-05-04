@@ -1,1 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARIA — Augmented Reading Intelligence Assistant</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      min-height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
 
+    .aria-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .aria-header h1 {
+      font-size: 2.5rem;
+      color: #e94560;
+      text-shadow: 0 0 20px rgba(233, 69, 96, 0.5);
+      margin-bottom: 5px;
+    }
+
+    .aria-header p {
+      font-size: 1rem;
+      color: #a8dadc;
+      font-style: italic;
+    }
+
+    .beast-selector {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .beast-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+
+    .beast-btn.bit {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .beast-btn.static {
+      background: #4ecdc4;
+      color: white;
+    }
+
+    .beast-btn.lumen {
+      background: #ffe66d;
+      color: #333;
+    }
+
+    .beast-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 5px 20px rgba(255,255,255,0.2);
+    }
+
+    .beast-btn.active {
+      transform: scale(1.15);
+      box-shadow: 0 5px 25px rgba(255,255,255,0.4);
+      outline: 3px solid white;
+    }
+
+    .chat-container {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 600px;
+      padding: 25px;
+      backdrop-filter: blur(10px);
+    }
+
+    .beast-display {
+      text-align: center;
+      margin-bottom: 20px;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .beast-emoji {
+      font-size: 4rem;
+      margin-bottom: 5px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .beast-name {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #e94560;
+    }
+
+    .grade-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .grade-btn {
+      padding: 6px 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      background: transparent;
+      color: white;
+      font-family: inherit;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .grade-btn:hover,
+    .grade-btn.active {
+      background: rgba(255,255,255,0.2);
+      border-color: white;
+    }
+
+    .messages {
+      height: 250px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      padding: 10px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      padding: 10px 15px;
+      border-radius: 12px;
+      max-width: 85%;
+      line-height: 1.4;
+      font-size: 0.95rem;
+    }
+
+    .message.beast {
+      backgr
