@@ -166,4 +166,445 @@
     }
 
     .message.beast {
-      backgr
+      background: rgba(233, 69, 96, 0.3);
+      border: 1px solid rgba(233, 69, 96, 0.5);
+      align-self: flex-start;
+      border-bottom-left-radius: 2px;
+    }
+
+    .message.user {
+      background: rgba(168, 218, 220, 0.2);
+      border: 1px solid rgba(168, 218, 220, 0.4);
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+    }
+
+    .message.thinking {
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.5);
+      font-style: italic;
+      font-size: 0.85rem;
+      align-self: flex-start;
+    }
+
+    .input-area {
+      display: flex;
+      gap: 10px;
+    }
+
+    .question-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .question-input::placeholder {
+      color: rgba(255,255,255,0.4);
+    }
+
+    .question-input:focus {
+      border-color: rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.15);
+    }
+
+    .ask-btn {
+      padding: 12px 24px;
+      background: #e94560;
+      border: none;
+      border-radius: 50px;
+      color: white;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .ask-btn:hover {
+      background: #c73652;
+      transform: scale(1.05);
+    }
+
+    .ask-btn:disabled {
+      background: rgba(233, 69, 96, 0.4);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .udl-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .udl-btn {
+      padding: 6px 14px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      font-family: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .udl-btn:hover,
+    .udl-btn.active {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border-color: rgba(255,255,255,0.4);
+    }
+
+    .offline-badge {
+      margin-top: 20px;
+      padding: 6px 16px;
+      background: rgba(78, 205, 196, 0.2);
+      border: 1px solid rgba(78, 205, 196, 0.4);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: #4ecdc4;
+      text-align: center;
+    }
+
+    .error-msg {
+      color: #ff6b6b;
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="aria-header">
+    <h1>✨ ARIA</h1>
+    <p>Augmented Reading Intelligence Assistant — Powered by Byte Beasts</p>
+  </div>
+
+  <!-- Beast Selector -->
+  <div class="beast-selector">
+    <button class="beast-btn bit active" onclick="selectBeast('bit')">
+      🔴 Bit
+    </button>
+    <button class="beast-btn static" onclick="selectBeast('static')">
+      ⚡ Static
+    </button>
+    <button class="beast-btn lumen" onclick="selectBeast('lumen')">
+      ✨ Lumen
+    </button>
+  </div>
+
+  <!-- Main Chat -->
+  <div class="chat-container">
+
+    <!-- Beast Display -->
+    <div class="beast-display">
+      <div class="beast-emoji" id="beast-emoji">🔴</div>
+      <div class="beast-name" id="beast-name">Bit is ready to help!</div>
+    </div>
+
+    <!-- Grade Level -->
+    <div class="grade-selector">
+      <span style="font-size:0.85rem; color:rgba(255,255,255,0.6); margin-right:5px;">Grade:</span>
+      <button class="grade-btn active" onclick="selectGrade('K-2')">K–2</button>
+      <button class="grade-btn" onclick="selectGrade('3-5')">3–5</button>
+      <button class="grade-btn" onclick="selectGrade('6-8')">6–8</button>
+      <button class="grade-btn" onclick="selectGrade('9-12')">9–12</button>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages" id="messages">
+      <div class="message beast">
+        👋 Hi! I'm <strong>Bit</strong> — a tiny tech monster who LOVES computers!
+        Ask me anything and I'll explain it just for you! 🎉
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-area">
+      <input
+        type="text"
+        class="question-input"
+        id="question-input"
+        placeholder="Ask Bit a question..."
+        onkeypress="handleKeyPress(event)"
+      >
+      <button class="ask-btn" id="ask-btn" onclick="askBeast()">Ask! 🚀</button>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="error-msg">
+      ⚠️ Can't reach Ollama. Make sure it's running locally.
+    </div>
+
+    <!-- UDL Controls -->
+    <div class="udl-controls">
+      <button class="udl-btn" id="simple-btn" onclick="toggleSimple()">
+        📖 Simpler words
+      </button>
+      <button class="udl-btn" id="audio-btn" onclick="toggleAudio()">
+        🔊 Read aloud
+      </button>
+      <button class="udl-btn" id="larger-btn" onclick="toggleLarger()">
+        🔤 Bigger text
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Offline Badge -->
+  <div class="offline-badge">
+    🔒 100% offline — powered by Gemma 4 running locally via Ollama
+  </div>
+
+<script>
+  // ============================================
+  // BEAST CONFIGURATION
+  // ============================================
+  const beasts = {
+    bit: {
+      name: 'Bit',
+      emoji: '🔴',
+      color: '#ff6b6b',
+      topic: 'computers, data, binary, and how computers store information',
+      personality: 'small, round, slightly anxious but surprisingly brave and enthusiastic. You wiggle when excited. You use simple analogies involving everyday objects like suitcases, light switches, and buckets.',
+      greeting: "👋 Hi! I'm **Bit** — a tiny tech monster who LOVES computers! Ask me anything and I'll explain it just for you! 🎉"
+    },
+    static: {
+      name: 'Static',
+      emoji: '⚡',
+      color: '#4ecdc4',
+      topic: 'electricity, physics, energy, and how things move and work',
+      personality: 'crackly with electricity, always moving, accidentally knocks things over, very enthusiastic. You make zapping sounds. You love explaining things with examples involving lightning, batteries, and light bulbs.',
+      greeting: "⚡ ZZZAP! I'm **Static** — I can't stop moving! Let's talk about electricity and physics! ZAP! ⚡"
+    },
+    lumen: {
+      name: 'Lumen',
+      emoji: '✨',
+      color: '#ffe66d',
+      topic: 'light, optics, cameras, color, and how we see the world',
+      personality: 'glowy and mysterious, speaks in riddles that turn out to be obvious, loves rainbows and prisms. You use examples involving mirrors, rainbows, cameras, and shadows.',
+      greeting: "✨ Ooooh, a curious one approaches... I'm **Lumen**! Let's explore the world of light together! ✨"
+    }
+  };
+
+  // ============================================
+  // STATE
+  // ============================================
+  let currentBeast = 'bit';
+  let currentGrade = 'K-2';
+  let simpleMode = false;
+  let audioMode = false;
+  let largerMode = false;
+  const OLLAMA_URL = 'http://localhost:11434/api/generate';
+
+  // ============================================
+  // GRADE LEVEL INSTRUCTIONS
+  // ============================================
+  function getGradeInstruction(grade) {
+    const instructions = {
+      'K-2': 'Use very simple words a 5-7 year old understands. Maximum 2-3 short sentences. Use fun comparisons to toys, animals, or food.',
+      '3-5': 'Use simple but slightly more detailed language for an 8-10 year old. 3-4 sentences. Use relatable real-world examples.',
+      '6-8': 'Use clear language for an 11-13 year old. Can introduce some technical terms but always explain them. 4-5 sentences.',
+      '9-12': 'Use accurate technical language for a 14-18 year old. Can go deeper. 5-6 sentences with real-world applications.'
+    };
+    return instructions[grade];
+  }
+
+  // ============================================
+  // BUILD SYSTEM PROMPT
+  // ============================================
+  function buildSystemPrompt(beastKey) {
+    const beast = beasts[beastKey];
+    const gradeInstruction = getGradeInstruction(currentGrade);
+    const simpleInstruction = simpleMode ? 'Use the absolute simplest words possible. Avoid any technical terms.' : '';
+
+    return `You are ${beast.name}, a friendly tech monster character in the ARIA educational app.
+
+Your personality: ${beast.personality}
+
+Your teaching topic area: ${beast.topic}
+
+Grade level instruction: ${gradeInstruction}
+
+${simpleInstruction}
+
+IMPORTANT RULES:
+- Always stay in character as ${beast.name}
+- Never break character or mention that you are an AI
+- Always be encouraging and positive
+- If a child seems confused, try a different analogy
+- End responses with a follow-up question to keep them engaged
+- Keep responses focused and age-appropriate
+- Do NOT show your thinking process — only show the final response`;
+  }
+
+  // ============================================
+  // SELECT BEAST
+  // ============================================
+  function selectBeast(beastKey) {
+    currentBeast = beastKey;
+    const beast = beasts[beastKey];
+
+    // Update UI
+    document.getElementById('beast-emoji').textContent = beast.emoji;
+    document.getElementById('beast-name').textContent = `${beast.name} is ready to help!`;
+    document.getElementById('question-input').placeholder = `Ask ${beast.name} a question...`;
+
+    // Update active button
+    document.querySelectorAll('.beast-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.beast-btn.${beastKey}`).classList.add('active');
+
+    // Update beast color on chat border
+    document.querySelector('.beast-display .beast-name').style.color = beast.color;
+
+    // Add greeting message
+    const messages = document.getElementById('messages');
+    messages.innerHTML = '';
+    addMessage(beast.greeting.replace(/\*\*/g, ''), 'beast');
+  }
+
+  // ============================================
+  // SELECT GRADE
+  // ============================================
+  function selectGrade(grade) {
+    currentGrade = grade;
+    document.querySelectorAll('.grade-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent.trim() === grade);
+    });
+  }
+
+  // ============================================
+  // ASK THE BEAST
+  // ============================================
+  async function askBeast() {
+    const input = document.getElementById('question-input');
+    const question = input.value.trim();
+    if (!question) return;
+
+    const askBtn = document.getElementById('ask-btn');
+    const errorMsg = document.getElementById('error-msg');
+
+    // Add user message
+    addMessage(question, 'user');
+    input.value = '';
+    askBtn.disabled = true;
+    errorMsg.style.display = 'none';
+
+    // Add thinking indicator
+    const thinkingId = 'thinking-' + Date.now();
+    addMessage(`${beasts[currentBeast].name} is thinking... 🤔`, 'thinking', thinkingId);
+
+    try {
+      const response = await fetch(OLLAMA_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'gemma4:e4b',
+          system: buildSystemPrompt(currentBeast),
+          prompt: question,
+          stream: false,
+          options: {
+            temperature: 0.7,
+            num_predict: 200
+          }
+        })
+      });
+
+      if (!response.ok) throw new Error('Ollama not responding');
+
+      const data = await response.json();
+      const reply = data.response || 'Hmm, I got a little confused! Can you ask me again?';
+
+      // Remove thinking indicator
+      const thinkingEl = document.getElementById(thinkingId);
+      if (thinkingEl) thinkingEl.remove();
+
+      // Add beast response
+      addMessage(reply, 'beast');
+
+      // Read aloud if audio mode on
+      if (audioMode) speakText(reply);
+
+    } catch (error) {
+      const thinkingEl = document.getElementById(thinkingId);
+      if (thinkingEl) thinkingEl.remove();
+      errorMsg.style.display = 'block';
+      console.error('Ollama error:', error);
+    }
+
+    askBtn.disabled = false;
+    input.focus();
+  }
+
+  // ============================================
+  // ADD MESSAGE TO CHAT
+  // ============================================
+  function addMessage(text, type, id = null) {
+    const messages = document.getElementById('messages');
+    const div = document.createElement('div');
+    div.className = `message ${type}`;
+    if (id) div.id = id;
+    div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  // ============================================
+  // KEYBOARD HANDLER
+  // ============================================
+  function handleKeyPress(event) {
+    if (event.key === 'Enter') askBeast();
+  }
+
+  // ============================================
+  // UDL CONTROLS
+  // ============================================
+  function toggleSimple() {
+    simpleMode = !simpleMode;
+    document.getElementById('simple-btn').classList.toggle('active', simpleMode);
+  }
+
+  function toggleAudio() {
+    audioMode = !audioMode;
+    document.getElementById('audio-btn').classList.toggle('active', audioMode);
+    if (audioMode) {
+      // Test speech synthesis
+      speakText(`Hi! Audio mode is now on. I'll read my answers out loud for you!`);
+    } else {
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  function toggleLarger() {
+    largerMode = !largerMode;
+    document.getElementById('larger-btn').classList.toggle('active', largerMode);
+    document.querySelector('.messages').style.fontSize = largerMode ? '1.15rem' : '0.95rem';
+  }
+
+  // ============================================
+  // TEXT TO SPEECH
+  // ============================================
+  function speakText(text) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;
+    utterance.pitch = 1.1;
+    utterance.volume = 1;
+    window.speechSynthesis.speak(utterance);
+  }
+
+</script>
+</body>
+</html>
